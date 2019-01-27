@@ -1,0 +1,199 @@
+# Items that apply to ALL profiles:
+# Allow Eureka to recognize multiple apps of the same type on the same host as separate instances:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8010}/eureka
+  instance:
+    instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
+      
+      
+# Select any available port if neither port nor server port are specified.
+server:
+  port: ${PORT:${SERVER_PORT:0}}
+
+# Default DB2 Access
+spring:
+  datasource:
+    url: ${DB2_JDBC_URL}
+    username: ${DB2_JDBC_USERNAME}
+    password: ${DB2_JDBC_PASSWORD}
+    driver-class-name: ${DB2_JDBC_DRIVER}
+    hikari:
+      driver-class-name: ${DB2_JDBC_DRIVER}
+      jdbc-url: ${DB2_JDBC_URL}
+      username: ${DB2_JDBC_USERNAME}
+      password: ${DB2_JDBC_PASSWORD}
+      connection-init-sql: SELECT 1 FROM SYSIBM.DUAL
+      connection-test-query: SELECT 1 FROM SYSIBM.DUAL
+      auto-commit: true
+  jpa:
+    database-platform: ${JPA_DB2_HIEBERNATE_DIALECT}
+  http:
+    multipart:
+      max-file-size: 150MB
+      max-request-size: 150MB
+      enabled: true
+    
+# Feign Clients default request interceptor to add JWT Access Token
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+        requestInterceptors:
+          - ibm.svc.emcc.common.security.JwtAuthAccessTokenRequestInterceptor
+
+# Disable Hystrix timeout globally (for all services)
+hystrix.command.default.execution.timeout.enabled: false
+
+# For quicker Ribbon load balancer refresh 
+api-gateway.ribbon.ServerListRefreshInterval: 5000
+admin-utilities.ribbon.ServerListRefreshInterval: 5000
+emp-movement.ribbon.ServerListRefreshInterval: 5000
+asset-detail.ribbon.ServerListRefreshInterval: 5000
+movement-rule.ribbon.ServerListRefreshInterval: 5000
+reporting.ribbon.ServerListRefreshInterval: 5000
+
+DB2_JDBC_DRIVER: com.ibm.db2.jcc.DB2Driver
+JPA_DB2_HIEBERNATE_DIALECT: org.hibernate.dialect.DB2Dialect
+
+---
+spring:
+  profiles: default
+  datasource:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 3
+  jpa:
+    show-sql: true
+  zipkin:
+      baseUrl: http://inmbzp5160.in.dst.ibm.com:9412/
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    ibm.svc: DEBUG
+    org.apache: WARN
+    com.netflix: WARN
+    org.jpa: WARN
+    org.springframework: INFO
+    org.hibernate: WARN
+    org.drools.core.xml: OFF
+    org.drools.compiler: WARN
+    com.zaxxer.hikari: WARN
+    org.drools: WARN
+  
+DB2_JDBC_URL: jdbc:db2://inmbzp7108.in.dst.ibm.com:50000/emccdev
+DB2_JDBC_USERNAME: appuser
+DB2_JDBC_PASSWORD: Time2work
+
+      
+LOGSTASH_SERVER: 9.109.123.160:5010
+jwt:
+  secret: sTpSeZ-Secr3tKey
+  expiration:
+    access: 1800
+    refresh: 1800
+
+testMode: true
+httpsAuth: false
+---
+spring:
+  profiles: UAT
+  datasource:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+  jpa:
+    show-sql: false      
+  zipkin:
+      baseUrl: http://inmbzp5160.in.dst.ibm.com:9412/
+
+logging:
+  level:
+    org.springframework.security: INFO
+    ibm.svc: DEBUG
+    org.apache: WARN
+    com.netflix: WARN
+    org.jpa: WARN
+    org.springframework: INFO
+    org.hibernate: WARN
+    com.zaxxer.hikari: WARN
+    org.drools.core.xml: OFF
+    org.drools.compiler: WARN
+    org.drools: WARN
+
+encrypt:
+  key-store:
+    location: file://${user.home}/emccMicroservices/emccConfig.jks
+    password: emccStorepass
+    alias: emccConfigKey
+    secret: emccKeypass
+    
+DB2_JDBC_URL: jdbc:db2://inmbzp7108.in.dst.ibm.com:50000/emccdev
+DB2_JDBC_USERNAME: appuser
+DB2_JDBC_PASSWORD: Time2work
+
+LOGSTASH_SERVER: 9.109.123.160:5010
+jwt:
+  secret: sTpSeZ-Secr3tKey4U9T
+  expiration:
+    access: 1800
+    refresh: 1800
+
+testMode: true
+httpsAuth: true
+
+
+---
+spring:
+  profiles: PROD
+  datasource:
+    hikari:
+      minimum-idle: 4
+      maximum-pool-size: 8
+  jpa:
+    show-sql: false      
+  zipkin:
+    baseUrl: http://10.138.168.210:9412/
+
+logging:
+  level:
+    org.springframework.security: ERROR
+    ibm.svc: DEBUG
+    org.apache: WARN
+    com.netflix: WARN
+    org.jpa: WARN
+    org.springframework: INFO
+    org.hibernate: WARN
+    com.zaxxer.hikari: WARN
+    org.drools.core.xml: OFF
+    org.drools.compiler: WARN
+    org.drools: WARN
+
+# TODO Update Production properties after environment setup
+encrypt:
+  key-store:
+    location: file:///data/disk1/microservices/emccConfig.jks
+    password: emccStorepass
+    alias: emccConfigKey
+    secret: emccKeypass
+    
+DB2_JDBC_URL: jdbc:db2://10.138.168.224:50000/avtprod
+DB2_JDBC_USERNAME: artbatch
+DB2_JDBC_PASSWORD: Work4ibm
+
+
+LOGSTASH_SERVER: 10.138.168.210:5010
+jwt:
+  secret: sTpSeZ-Secr3tKey4Pr0D
+  expiration:
+    access: 1800
+    refresh: 1800
+
+testMode: true
+httpsAuth: true
