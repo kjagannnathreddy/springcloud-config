@@ -1,0 +1,32 @@
+"Report_Entry": [
+        {
+            "manager": "022838744",
+            "bandFlag": "LB",
+            "hireType": "LH",
+            "reqRcvdDate": "21Mar2019",
+            "reportCreated": "1104201904224503",
+            "dept": "JUB",
+            "cnum": "765832744",
+            "wpi": "S",
+            "from": "SEZ 01 HYDERABAD",
+            "to": "STP 01 GURGAON",
+            "email": "naveen.agnurkar@in.ibm.com",
+            "doj": "17May2004",
+            "status": "In Progress"
+        },
+        {
+            "manager": "090553744",
+            "bandFlag": "HB",
+            "hireType": "LH",
+            "reqRcvdDate": "21Mar2019",
+            "reportCreated": "1104201904224503",
+            "dept": "E7G",
+            "cnum": "010039744",
+            "wpi": "S",
+            "from": "STP 02 BANGALORE",
+            "to": "STP 02 CHENNAI",
+            "email": "pradeepb@in.ibm.com",
+            "doj": "05Oct2006",
+            "status": "In Progress"
+        }
+	]
